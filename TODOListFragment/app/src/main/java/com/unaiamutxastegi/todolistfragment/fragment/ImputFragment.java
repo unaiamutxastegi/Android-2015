@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.unaiamutxastegi.todolistfragment.R;
+import com.unaiamutxastegi.todolistfragment.model.ToDo;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +19,7 @@ import com.unaiamutxastegi.todolistfragment.R;
 public class ImputFragment extends Fragment {
 
     public interface TODOItemListener{
-        public void addTodo(String todo);
+        public void addTodo(ToDo todo);
     }
 
     private Button btnAdd;
@@ -39,7 +40,7 @@ public class ImputFragment extends Fragment {
             this.target = (TODOItemListener) activity;
         }
         catch (ClassCastException ex){
-            throw new ClassCastException(activity.toString() + "must implement TODOItemListener interface");
+            throw new ClassCastException(activity.toString() + " must implement TODOItemListener interface");
         }
     }
 
@@ -60,9 +61,11 @@ public class ImputFragment extends Fragment {
         btnAdd.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String todo = todoText.getText().toString();
 
+                ToDo todo = new ToDo(todoText.getText().toString());
                 target.addTodo(todo);
+
+                todoText.setText("");
             }
         });
     }
