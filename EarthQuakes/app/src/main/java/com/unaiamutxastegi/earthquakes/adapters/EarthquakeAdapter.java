@@ -1,4 +1,4 @@
-package com.unaiamutxastegi.todolistfragment.adapters;
+package com.unaiamutxastegi.earthquakes.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,20 +8,19 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.unaiamutxastegi.todolistfragment.R;
-import com.unaiamutxastegi.todolistfragment.model.ToDo;
+import com.unaiamutxastegi.earthquakes.R;
+import com.unaiamutxastegi.earthquakes.model.EarthQuake;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
- * Created by cursomovil on 23/03/15.
+ * Created by cursomovil on 25/03/15.
  */
-public class ToDoAdapter extends ArrayAdapter<ToDo>{
+public class EarthquakeAdapter extends ArrayAdapter<EarthQuake> {
 
     private int resource;
 
-    public ToDoAdapter(Context context, int resource, List<ToDo> objects) {
+    public EarthquakeAdapter(Context context, int resource, List<EarthQuake> objects) {
         super(context, resource, objects);
         this.resource = resource;
     }
@@ -43,15 +42,16 @@ public class ToDoAdapter extends ArrayAdapter<ToDo>{
             layout = (LinearLayout) convertView;
         }
 
-        ToDo item = getItem(position);
+        EarthQuake earthQuake = getItem(position);
 
-        TextView lblDate = (TextView) layout.findViewById(R.id.lblDate);
-        TextView lblTask = (TextView) layout.findViewById(R.id.lblTask);
+        TextView txtMagnitude = (TextView) layout.findViewById(R.id.txtMagnitud);
+        TextView txtInfo = (TextView) layout.findViewById(R.id.txtInfo);
 
-        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String info = "ID: " + earthQuake.get_id()+ " PLACE: " + earthQuake.getPlace()+ " COORDS: " + earthQuake.getCoords()
+                +" TIME: "+ earthQuake.getTime();
+        txtMagnitude.setText(Double.toString(earthQuake.getMagnitude()));
 
-        lblTask.setText(item.getTarea());
-        lblDate.setText(item.getCreatedFormated());
+        txtInfo.setText(info);
 
         return layout;
     }
