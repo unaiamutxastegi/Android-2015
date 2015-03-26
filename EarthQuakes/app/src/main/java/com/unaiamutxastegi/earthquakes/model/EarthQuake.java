@@ -1,5 +1,8 @@
 package com.unaiamutxastegi.earthquakes.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
@@ -81,4 +84,5 @@ public class EarthQuake {
     public String get_id() {
         return _id;
     }
+
 }

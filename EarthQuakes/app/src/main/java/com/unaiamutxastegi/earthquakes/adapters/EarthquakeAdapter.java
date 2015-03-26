@@ -46,12 +46,12 @@ public class EarthquakeAdapter extends ArrayAdapter<EarthQuake> {
 
         TextView txtMagnitude = (TextView) layout.findViewById(R.id.txtMagnitud);
         TextView txtInfo = (TextView) layout.findViewById(R.id.txtInfo);
+        TextView txtTime = (TextView) layout.findViewById(R.id.txtTime);
 
-        String info = "ID: " + earthQuake.get_id()+ " PLACE: " + earthQuake.getPlace()+ " COORDS: " + earthQuake.getCoords()
-                +" TIME: "+ earthQuake.getTime();
         txtMagnitude.setText(Double.toString(earthQuake.getMagnitude()));
 
-        txtInfo.setText(info);
+        txtInfo.setText(" PLACE: " + earthQuake.getPlace());
+        txtTime.setText(" TIME: "+ earthQuake.getTime());
 
         return layout;
     }

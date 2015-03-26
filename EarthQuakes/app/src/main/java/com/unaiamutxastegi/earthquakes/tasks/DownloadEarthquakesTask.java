@@ -30,11 +30,11 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
 
     public interface AddEarthQuakeInterface{
         public void addEarthQuake(EarthQuake earthQuake);
+        public void notifyTotal(int total);
     }
 
     private final String EARTHQUAKE ="EARTHQUAKE";
 
-    private JSONObject json;
     private AddEarthQuakeInterface target;
 
     public DownloadEarthquakesTask(AddEarthQuakeInterface target){
@@ -43,10 +43,19 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
 
     @Override
     protected Integer doInBackground(String... urls) {
+        int count = 0;
+
         if (urls.length > 0){
-            updateEarthQuake(urls[0]);
+            count = updateEarthQuake(urls[0]);
         }
-            return null;
+            return count;
+    }
+
+    @Override
+    protected void onPostExecute(Integer count) {
+        super.onPostExecute(count);
+
+        target.notifyTotal(count.intValue());
     }
 
     @Override
@@ -56,7 +65,10 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
         target.addEarthQuake(earthQuakes[0]);
     }
 
-    private void updateEarthQuake(String earthquakeFeed) {
+    private Integer updateEarthQuake(String earthquakeFeed) {
+        JSONObject json;
+        int count = 0;
+
         try {
             URL url = new URL(earthquakeFeed);
 
@@ -76,6 +88,7 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
 
                 json = new JSONObject(responseStrBuilder.toString());
                 JSONArray earthquakes = json.getJSONArray("features");
+                count = earthquakes.length();
 
                 for (int i = earthquakes.length() - 1; i >= 0; i--) {
                     processEarthQuakeTask(earthquakes.getJSONObject(i));
@@ -88,6 +101,7 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return ((Integer) count);
     }
 
     private void processEarthQuakeTask(JSONObject jsonObject) {

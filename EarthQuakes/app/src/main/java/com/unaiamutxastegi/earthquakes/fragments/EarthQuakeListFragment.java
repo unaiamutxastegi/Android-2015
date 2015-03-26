@@ -1,16 +1,21 @@
 package com.unaiamutxastegi.earthquakes.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.unaiamutxastegi.earthquakes.R;
 
 import com.unaiamutxastegi.earthquakes.adapters.EarthquakeAdapter;
+import com.unaiamutxastegi.earthquakes.earthquake_detail;
 import com.unaiamutxastegi.earthquakes.model.Coordinate;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
 import com.unaiamutxastegi.earthquakes.tasks.DownloadEarthquakesTask;
@@ -30,6 +35,7 @@ import java.util.ArrayList;
 
 public class EarthQuakeListFragment extends ListFragment implements DownloadEarthquakesTask.AddEarthQuakeInterface {
 
+    public static final String EARTHQUAKE = "an earthquake";
     private ArrayList<EarthQuake> earthQuakes;
     private EarthquakeAdapter aa;
 
@@ -44,6 +50,17 @@ public class EarthQuakeListFragment extends ListFragment implements DownloadEart
     }
 
     @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        EarthQuake earthQuake = earthQuakes.get(position);
+
+        Intent earthquakeIntent = new Intent(getActivity(), earthquake_detail.class);
+        String strDetail = "MAGNITUDE: " + Double.toString(earthQuake.getMagnitude()) + "ID: " + earthQuake.get_id();
+        earthquakeIntent.putExtra(EARTHQUAKE, strDetail);
+        startActivity(earthquakeIntent);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -53,10 +70,17 @@ public class EarthQuakeListFragment extends ListFragment implements DownloadEart
         return layout;
     }
 
-
     @Override
     public void addEarthQuake(EarthQuake earthQuake) {
-        earthQuakes.add(0,earthQuake);
+        earthQuakes.add(0, earthQuake);
         aa.notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyTotal(int total) {
+        String msg = getString(R.string.num_earthquakes, total);
+        Toast t = Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT);
+        t.setGravity(Gravity.CENTER, Gravity.CENTER, Gravity.CENTER);
+        t.show();
     }
 }
