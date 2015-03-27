@@ -3,18 +3,25 @@ package com.unaiamutxastegi.earthquakes;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.unaiamutxastegi.earthquakes.model.EarthQuake;
+import com.unaiamutxastegi.earthquakes.tasks.DownloadEarthquakesTask;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements DownloadEarthquakesTask.AddEarthQuakeInterface{
 
-    private int PREFS_ACTIVITY = 1;
+    public int PREFS_ACTIVITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        downloadEarthQuake();
     }
 
     @Override
@@ -45,5 +52,18 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void notifyTotal(int total) {
+        String msg = getString(R.string.num_earthquakes, total);
+        Toast t = Toast.makeText(this,msg,Toast.LENGTH_SHORT);
+        t.setGravity(Gravity.CENTER, Gravity.CENTER, Gravity.CENTER);
+        t.show();
+    }
+
+    private void downloadEarthQuake(){
+        DownloadEarthquakesTask task = new DownloadEarthquakesTask(this,this);
+        task.execute(getString(R.string.earthquake_url));
     }
 }

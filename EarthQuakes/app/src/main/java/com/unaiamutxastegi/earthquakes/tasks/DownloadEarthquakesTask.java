@@ -1,10 +1,12 @@
 package com.unaiamutxastegi.earthquakes.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import com.unaiamutxastegi.earthquakes.R;
+import com.unaiamutxastegi.earthquakes.database.EarthQuakeDB;
 import com.unaiamutxastegi.earthquakes.model.Coordinate;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
 
@@ -29,16 +31,18 @@ import static android.provider.Settings.Global.getString;
 public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integer> {
 
     public interface AddEarthQuakeInterface{
-        public void addEarthQuake(EarthQuake earthQuake);
+        //public void addEarthQuake(EarthQuake earthQuake);
         public void notifyTotal(int total);
     }
 
+    private EarthQuakeDB earthQuakeDB;
     private final String EARTHQUAKE ="EARTHQUAKE";
 
     private AddEarthQuakeInterface target;
 
-    public DownloadEarthquakesTask(AddEarthQuakeInterface target){
+    public DownloadEarthquakesTask(Context context, AddEarthQuakeInterface target){
         this.target = target;
+        this.earthQuakeDB = new EarthQuakeDB(context);
     }
 
     @Override
@@ -62,7 +66,7 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
     protected void onProgressUpdate(EarthQuake... earthQuakes) {
         super.onProgressUpdate(earthQuakes);
 
-        target.addEarthQuake(earthQuakes[0]);
+        //target.addEarthQuake(earthQuakes[0]);
     }
 
     private Integer updateEarthQuake(String earthquakeFeed) {

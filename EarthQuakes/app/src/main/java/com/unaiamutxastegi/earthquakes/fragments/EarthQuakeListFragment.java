@@ -1,8 +1,10 @@
 package com.unaiamutxastegi.earthquakes.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.ListFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,9 +35,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class EarthQuakeListFragment extends ListFragment implements DownloadEarthquakesTask.AddEarthQuakeInterface {
+public class EarthQuakeListFragment extends ListFragment {
 
     public static final String EARTHQUAKE = "an earthquake";
+    private SharedPreferences prefs;
     private ArrayList<EarthQuake> earthQuakes;
     private EarthquakeAdapter aa;
 
@@ -44,9 +47,10 @@ public class EarthQuakeListFragment extends ListFragment implements DownloadEart
         super.onCreate(savedInstanceState);
 
         earthQuakes = new ArrayList<>();
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        DownloadEarthquakesTask task = new DownloadEarthquakesTask(this);
-        task.execute(getString(R.string.earthquake_url));
+        //DownloadEarthquakesTask task = new DownloadEarthquakesTask(getActivity(), this);
+        //task.execute(getString(R.string.earthquake_url));
     }
 
     @Override
@@ -70,17 +74,14 @@ public class EarthQuakeListFragment extends ListFragment implements DownloadEart
         return layout;
     }
 
-    @Override
-    public void addEarthQuake(EarthQuake earthQuake) {
-        earthQuakes.add(0, earthQuake);
-        aa.notifyDataSetChanged();
-    }
+
 
     @Override
-    public void notifyTotal(int total) {
-        String msg = getString(R.string.num_earthquakes, total);
-        Toast t = Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT);
-        t.setGravity(Gravity.CENTER, Gravity.CENTER, Gravity.CENTER);
-        t.show();
+    public void onResume() {
+        super.onResume();
+
+        //downloadEarthQuake();
     }
+
+
 }

@@ -23,4 +23,7 @@
     <string name="pref_magnitude_desc">Select minimum magnitude</string>
     <string name="update_interval_dialog">Choose frequency</string>
     <string name="pref_magnitude_dialog">Choose magnitude</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
