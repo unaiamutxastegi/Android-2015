@@ -1,13 +1,12 @@
-package com.unaiamutxastegi.earthquakes.tasks;
+package com.unaiamutxastegi.earthquakes.service;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.os.AsyncTask;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import com.unaiamutxastegi.earthquakes.R;
-import com.unaiamutxastegi.earthquakes.adapters.EarthquakeAdapter;
+import com.unaiamutxastegi.earthquakes.alarm.Alarm;
 import com.unaiamutxastegi.earthquakes.database.EarthQuakeDB;
 import com.unaiamutxastegi.earthquakes.model.Coordinate;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
@@ -23,54 +22,35 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 
-import static android.provider.Settings.Global.getString;
-
-/**
- * Created by cursomovil on 25/03/15.
- */
-public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integer> {
-
-    public interface AddEarthQuakeInterface{
-        //public void addEarthQuake(EarthQuake earthQuake);
-        public void notifyTotal(int total);
-    }
-
-    private final String EARTHQUAKE = "EARTHQUAKE";
+public class DownloadEarthQuakeService extends Service {
 
     private EarthQuakeDB earthQuakeDB;
+    private final String EARTHQUAKE = "EARTHQUAKE";
 
 
-    private AddEarthQuakeInterface target;
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-    public DownloadEarthquakesTask(Context context, AddEarthQuakeInterface target){
-        this.target = target;
-        this.earthQuakeDB = new EarthQuakeDB(context);
+        earthQuakeDB = new EarthQuakeDB(this);
+
     }
 
     @Override
-    protected Integer doInBackground(String... urls) {
-        int count = 0;
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
 
-/*        if (urls.length > 0){
-            count = updateEarthQuake(urls[0]);
-        }*/
-            return count;
-    }
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                updateEarthQuake(getString(R.string.earthquake_url));
+            }
+        });
 
-    @Override
-    protected void onPostExecute(Integer count) {
-        super.onPostExecute(count);
+        t.start();
 
-        target.notifyTotal(count.intValue());
-    }
-
-    @Override
-    protected void onProgressUpdate(EarthQuake... earthQuakes) {
-        super.onProgressUpdate(earthQuakes);
-
-        //target.addEarthQuake(earthQuakes[0]);
+        return Service.START_STICKY;
     }
 
     private Integer updateEarthQuake(String earthquakeFeed) {
@@ -141,5 +121,8 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
         }
     }
 
-
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 }

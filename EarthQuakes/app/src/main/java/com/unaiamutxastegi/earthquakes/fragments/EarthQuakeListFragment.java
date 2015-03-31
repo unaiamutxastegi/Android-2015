@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.unaiamutxastegi.earthquakes.R;
 
 import com.unaiamutxastegi.earthquakes.adapters.EarthquakeAdapter;
+import com.unaiamutxastegi.earthquakes.database.EarthQuakeDB;
 import com.unaiamutxastegi.earthquakes.earthquake_detail;
 import com.unaiamutxastegi.earthquakes.model.Coordinate;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
@@ -41,16 +42,19 @@ public class EarthQuakeListFragment extends ListFragment {
     private SharedPreferences prefs;
     private ArrayList<EarthQuake> earthQuakes;
     private EarthquakeAdapter aa;
+    private EarthQuakeDB earthQuakeDB;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         earthQuakes = new ArrayList<>();
+        earthQuakeDB = new EarthQuakeDB(getActivity());
+
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        //DownloadEarthquakesTask task = new DownloadEarthquakesTask(getActivity(), this);
-        //task.execute(getString(R.string.earthquake_url));
+        //updateEarthQuakeList(0);
+
     }
 
     @Override
@@ -59,7 +63,7 @@ public class EarthQuakeListFragment extends ListFragment {
         EarthQuake earthQuake = earthQuakes.get(position);
 
         Intent earthquakeIntent = new Intent(getActivity(), earthquake_detail.class);
-        String strDetail = "MAGNITUDE: " + Double.toString(earthQuake.getMagnitude()) + "ID: " + earthQuake.get_id();
+        String strDetail = earthQuake.get_id();
         earthquakeIntent.putExtra(EARTHQUAKE, strDetail);
         startActivity(earthquakeIntent);
     }
@@ -74,14 +78,17 @@ public class EarthQuakeListFragment extends ListFragment {
         return layout;
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();
 
-        //downloadEarthQuake();
+        updateEarthQuakeList(Integer.parseInt(prefs.getString(getString(R.string.PREF_MAGNITUDE_MIN), "0")));
     }
 
+    private void updateEarthQuakeList(int magnitude) {
+        earthQuakes.clear();
+        earthQuakes.addAll(earthQuakeDB.getAllByMagnitude(magnitude));
 
+        aa.notifyDataSetChanged();
+    }
 }

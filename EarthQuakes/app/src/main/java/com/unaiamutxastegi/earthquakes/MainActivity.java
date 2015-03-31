@@ -8,20 +8,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.unaiamutxastegi.earthquakes.alarm.Alarm;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
+import com.unaiamutxastegi.earthquakes.service.DownloadEarthQuakeService;
 import com.unaiamutxastegi.earthquakes.tasks.DownloadEarthquakesTask;
 
 
 public class MainActivity extends ActionBarActivity implements DownloadEarthquakesTask.AddEarthQuakeInterface{
 
     public int PREFS_ACTIVITY = 1;
+    private Alarm alarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        downloadEarthQuake();
+        alarm = new Alarm();
+        alarm.setAlarm(this);
+        //downloadEarthQuake();
+
+
     }
 
     @Override
@@ -62,8 +69,16 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthquak
         t.show();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     private void downloadEarthQuake(){
-        DownloadEarthquakesTask task = new DownloadEarthquakesTask(this,this);
-        task.execute(getString(R.string.earthquake_url));
+        //DownloadEarthquakesTask task = new DownloadEarthquakesTask(this,this);
+        //task.execute(getString(R.string.earthquake_url));
+
+        Intent download = new Intent(this, DownloadEarthQuakeService.class);
+        startService(download);
     }
 }
