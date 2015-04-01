@@ -53,9 +53,9 @@ public class DownloadEarthquakesTask extends AsyncTask<String, EarthQuake, Integ
     protected Integer doInBackground(String... urls) {
         int count = 0;
 
-/*        if (urls.length > 0){
+        if (urls.length > 0){
             count = updateEarthQuake(urls[0]);
-        }*/
+        }
             return count;
     }
 

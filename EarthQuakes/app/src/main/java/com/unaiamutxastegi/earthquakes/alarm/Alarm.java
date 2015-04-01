@@ -6,46 +6,35 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.unaiamutxastegi.earthquakes.service.DownloadEarthQuakeService;
+
 /**
  * Created by cursomovil on 31/03/15.
  */
-public class Alarm extends BroadcastReceiver {
+public class Alarm  {
 
+    public static void setAlarm(Context context, long timeOrLengthofWait) {
+        int alarmType = AlarmManager.RTC;
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
+        AlarmManager alarmManager =  (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
 
-    }
-
-    public void setAlarm(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-
-        int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-        long timeOrLengthofWait = 10000;
-        String ALARM_ACTION = "ALARM_ACTION";
-
-        Intent intentToFire = new Intent(ALARM_ACTION);
-
+        Intent intentToFire = new Intent(context, DownloadEarthQuakeService.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intentToFire, 0);
 
-        alarmManager.set(alarmType, timeOrLengthofWait, alarmIntent);
+        alarmManager.setInexactRepeating(alarmType, timeOrLengthofWait, timeOrLengthofWait, alarmIntent);
+    }
+
+    public static void stopAlarm(Context context){
+        AlarmManager alarmManager =  (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+        Intent intentToFire = new Intent(context, DownloadEarthQuakeService.class);
+
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intentToFire, 0);
 
         alarmManager.cancel(alarmIntent);
     }
 
-    private void setInexactRepeatingAlarm(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-        long timeOrLengthofWait = AlarmManager.INTERVAL_HALF_HOUR;
-
-        String ALARM_ACTION = "ALARM_ACTION";
-
-        Intent intentToFire = new Intent(ALARM_ACTION);
-
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intentToFire, 0);
-
-
-        alarmManager.setInexactRepeating(alarmType, timeOrLengthofWait, timeOrLengthofWait, alarmIntent);
+    public static void updateAlarm(Context context, long timeOrLengthofWait){
+        setAlarm(context,timeOrLengthofWait);
     }
+
 }

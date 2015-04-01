@@ -16,26 +16,13 @@ import com.unaiamutxastegi.earthquakes.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingFragment extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefs.registerOnSharedPreferenceChangeListener(this);
-
         addPreferencesFromResource(R.xml.userpreferences);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        if (key.equals(getString(R.string.PREF_AUTO_UPDATE))) {
-            sharedPreferences.getBoolean(key, true);
-        } else if (key.equals(getString(R.string.PREF_UPDATE_INTERVAL))) {
-            sharedPreferences.getInt(key, 1);
-        }
     }
 }
 

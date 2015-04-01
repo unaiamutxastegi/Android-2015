@@ -1,6 +1,9 @@
 package com.unaiamutxastegi.earthquakes;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -16,19 +19,17 @@ import com.unaiamutxastegi.earthquakes.tasks.DownloadEarthquakesTask;
 
 public class MainActivity extends ActionBarActivity implements DownloadEarthquakesTask.AddEarthQuakeInterface{
 
+    private final static String EARTHQUAKE_PREFS= "earthquake_prefs";
     public int PREFS_ACTIVITY = 1;
-    private Alarm alarm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        alarm = new Alarm();
-        alarm.setAlarm(this);
         //downloadEarthQuake();
-
-
+        checkToSetAlarm();
     }
 
     @Override
@@ -74,11 +75,24 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthquak
         super.onStart();
     }
 
+    private void checkToSetAlarm(){
+        String KEY = "LAUNCHED_BEFORE";
+        SharedPreferences prefs = getSharedPreferences(EARTHQUAKE_PREFS, Activity.MODE_PRIVATE);
+
+        if(!prefs.getBoolean(KEY,false)){
+            long interval = getResources().getInteger( R.integer.default_interval)*60*1000;
+            Alarm.setAlarm(this,interval);
+
+            prefs.edit().putBoolean(KEY,true).apply();
+        }
+
+    }
+
     private void downloadEarthQuake(){
         //DownloadEarthquakesTask task = new DownloadEarthquakesTask(this,this);
         //task.execute(getString(R.string.earthquake_url));
 
-        Intent download = new Intent(this, DownloadEarthQuakeService.class);
-        startService(download);
+        //Intent download = new Intent(this, DownloadEarthQuakeService.class);
+        //startService(download);
     }
 }

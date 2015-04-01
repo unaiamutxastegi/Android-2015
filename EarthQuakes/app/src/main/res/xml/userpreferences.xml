@@ -16,7 +16,8 @@
             android:summary="@string/update_interval_desc"
             android:dialogTitle="@string/update_interval_dialog"
             android:entries="@array/list_magnitud_options"
-            android:entryValues="@array/list_magnitud_values">
+            android:entryValues="@array/list_magnitud_values"
+            android:defaultValue="1">
         </ListPreference>
 </PreferenceCategory>
     <PreferenceCategory

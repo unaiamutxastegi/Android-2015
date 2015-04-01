@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Geolocation</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="altitude">altitude</string>
+    <string name="speed">speed</string>
+
+</resources>
