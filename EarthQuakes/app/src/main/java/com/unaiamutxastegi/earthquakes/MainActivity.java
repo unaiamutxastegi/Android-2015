@@ -89,8 +89,8 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthquak
     }
 
     private void downloadEarthQuake(){
-        //DownloadEarthquakesTask task = new DownloadEarthquakesTask(this,this);
-        //task.execute(getString(R.string.earthquake_url));
+        DownloadEarthquakesTask task = new DownloadEarthquakesTask(this,this);
+        task.execute(getString(R.string.earthquake_url));
 
         //Intent download = new Intent(this, DownloadEarthQuakeService.class);
         //startService(download);
