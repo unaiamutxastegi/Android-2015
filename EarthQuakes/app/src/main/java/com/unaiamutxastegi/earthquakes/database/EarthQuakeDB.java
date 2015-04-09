@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.unaiamutxastegi.earthquakes.model.Coordinate;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
 
 import java.sql.SQLDataException;
@@ -31,7 +32,7 @@ public class EarthQuakeDB {
     public static final String COLUMN_URL = "url";
     public static final String COLUMN_TIME = "time";
     public static final String[] result_columns = new String[]{
-            COLUMN_ID, COLUMN_PLACE, COLUMN_LAT, COLUMN_LONG, COLUMN_LONG, COLUMN_MAGNITUDE, COLUMN_URL, COLUMN_TIME};
+            COLUMN_ID, COLUMN_PLACE, COLUMN_LAT, COLUMN_LONG, COLUMN_MAGNITUDE, COLUMN_URL, COLUMN_TIME};
 
     public EarthQuakeDB(Context context) {
         this.helper = new EarthQuakeOpenHelper(context, EarthQuakeOpenHelper.DATABASE_NAME, null, EarthQuakeOpenHelper.DATABASE_VERSION);
@@ -112,12 +113,13 @@ public class EarthQuakeDB {
         while (cursor.moveToNext())	{
 
             EarthQuake earthQuake = new EarthQuake();
+            Coordinate coords = new Coordinate(cursor.getDouble(indexes.get(COLUMN_LAT)),cursor.getDouble(indexes.get(COLUMN_LONG)),0);
+            earthQuake.setCoords(coords);
             earthQuake.set_id(cursor.getString(indexes.get(COLUMN_ID)));
             earthQuake.setPlace(cursor.getString(indexes.get(COLUMN_PLACE)));
             earthQuake.setUrl(cursor.getString(indexes.get(COLUMN_URL)));
             earthQuake.setMagnitude(cursor.getDouble(indexes.get(COLUMN_MAGNITUDE)));
             earthQuake.setTime(cursor.getLong(indexes.get(COLUMN_TIME)));
-            //earthQuake.setCoords();
 
             earthQuakes.add(0,earthQuake);
         }

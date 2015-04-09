@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -42,6 +43,7 @@ public class earthquake_detail extends ActionBarActivity {
         Intent earthquakeIntent = getIntent();
 
         earthQuakeDetail = earthquakeIntent.getStringExtra(EarthQuakeListFragment.EARTHQUAKE);
+        earthQuake = earthQuakeDB.getAllByID(earthQuakeDetail);
 
         setUpMapIfNeeded();
         showLayout();
@@ -74,9 +76,6 @@ public class earthquake_detail extends ActionBarActivity {
     }
 
     private void showLayout() {
-
-        earthQuake = earthQuakeDB.getAllByID(earthQuakeDetail);
-
         txtInfoDetail.setText("MAGNITUDE: " + earthQuake.getMagnitude() + " ID: " + earthQuake.get_id());
     }
 
@@ -115,17 +114,9 @@ public class earthquake_detail extends ActionBarActivity {
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(earthQuake.getCoords().getLng(),earthQuake.getCoords().getLat())));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(earthQuake.getCoords().getLng(),earthQuake.getCoords().getLat())).title("Marker"));
     }
-
-
-
 
 }

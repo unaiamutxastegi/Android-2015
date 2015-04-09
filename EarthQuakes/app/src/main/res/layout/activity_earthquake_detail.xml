@@ -26,7 +26,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="86dp"
+                android:layout_height="50dp"
                 android:text="New Text"
                 android:id="@+id/txtInfoDetail"
                 android:textSize="20dp"
@@ -39,15 +39,16 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_weight="1">
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="fill_parent"
-                android:layout_height="429dp"
+
+            <fragment
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:id="@+id/map"
-                tools:context=".MapsActivity"
-                android:name="com.google.android.gms.maps.SupportMapFragment" />
+                android:layout_gravity="center_horizontal" />
         </LinearLayout>
     </LinearLayout>
 
