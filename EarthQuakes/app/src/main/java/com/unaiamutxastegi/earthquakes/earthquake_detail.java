@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.unaiamutxastegi.earthquakes.database.EarthQuakeDB;
 import com.unaiamutxastegi.earthquakes.fragments.EarthQuakeListFragment;
+import com.unaiamutxastegi.earthquakes.fragments.EarthQuakeMapFragment;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
 
 import java.util.ArrayList;
@@ -29,12 +30,15 @@ public class earthquake_detail extends ActionBarActivity {
     private TextView txtInfoDetail;
     private EarthQuakeDB earthQuakeDB;
     private EarthQuake earthQuake;
+    private EarthQuakeMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_earthquake_detail);
+
+        mapFragment = (EarthQuakeMapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         txtInfoDetail = (TextView) findViewById(R.id.txtInfoDetail);
         earthQuakeDB = new EarthQuakeDB(getApplicationContext());
@@ -45,9 +49,17 @@ public class earthquake_detail extends ActionBarActivity {
         earthQuakeDetail = earthquakeIntent.getStringExtra(EarthQuakeListFragment.EARTHQUAKE);
         earthQuake = earthQuakeDB.getAllByID(earthQuakeDetail);
 
-        setUpMapIfNeeded();
+        //setUpMapIfNeeded();
         showLayout();
+        showMap(earthQuake);
 
+    }
+
+    private void showMap(EarthQuake earthQuake) {
+        List<EarthQuake> earthQuakes = new ArrayList<>();
+        earthQuakes.add(earthQuake);
+
+        mapFragment.setEarthQuakes(earthQuakes);
     }
 
     @Override
@@ -83,7 +95,7 @@ public class earthquake_detail extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
+        //setUpMapIfNeeded();
     }
 
     /**
@@ -101,7 +113,7 @@ public class earthquake_detail extends ActionBarActivity {
      * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
      * method in {@link #onResume()} to guarantee that it will be called.
      */
-    private void setUpMapIfNeeded() {
+    /**private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -117,6 +129,6 @@ public class earthquake_detail extends ActionBarActivity {
     private void setUpMap() {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(earthQuake.getCoords().getLng(),earthQuake.getCoords().getLat())));
         mMap.addMarker(new MarkerOptions().position(new LatLng(earthQuake.getCoords().getLng(),earthQuake.getCoords().getLat())).title("Marker"));
-    }
+    }**/
 
 }
