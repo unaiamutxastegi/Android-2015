@@ -49,7 +49,7 @@ public class EarthQuakeMapFragment extends MapFragment implements GoogleMap.OnMa
 
         map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 
-        for (EarthQuake earthQuake : earthQuakes) {
+        for (EarthQuake earthQuake : this.earthQuakes) {
             LatLng point = new LatLng(earthQuake.getCoords().getLng(), earthQuake.getCoords().getLat());
 
             MarkerOptions marker = new MarkerOptions()
@@ -66,5 +66,7 @@ public class EarthQuakeMapFragment extends MapFragment implements GoogleMap.OnMa
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
 
         map.moveCamera(cu);
+        map.animateCamera(CameraUpdateFactory.zoomTo(10));
+
     }
 }

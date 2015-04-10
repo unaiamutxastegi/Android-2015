@@ -29,7 +29,7 @@ public class earthquake_detail extends ActionBarActivity {
     private String earthQuakeDetail;
     private TextView txtInfoDetail;
     private EarthQuakeDB earthQuakeDB;
-    private EarthQuake earthQuake;
+    //private EarthQuake earthQuake;
     private EarthQuakeMapFragment mapFragment;
 
     @Override
@@ -42,21 +42,26 @@ public class earthquake_detail extends ActionBarActivity {
 
         txtInfoDetail = (TextView) findViewById(R.id.txtInfoDetail);
         earthQuakeDB = new EarthQuakeDB(getApplicationContext());
-        earthQuake = new EarthQuake();
 
         Intent earthquakeIntent = getIntent();
 
         earthQuakeDetail = earthquakeIntent.getStringExtra(EarthQuakeListFragment.EARTHQUAKE);
-        earthQuake = earthQuakeDB.getAllByID(earthQuakeDetail);
+        EarthQuake earthQuake = earthQuakeDB.getAllByID(earthQuakeDetail);
 
         //setUpMapIfNeeded();
-        showLayout();
-        showMap(earthQuake);
+        showLayoutDetail(earthQuake);
+        //showMap(earthQuake);
 
+    }
+
+    private void showLayoutDetail(EarthQuake earthQuake) {
+        txtInfoDetail.setText("MAGNITUDE: " + earthQuake.getMagnitude() + " ID: " + earthQuake.get_id());
+        showMap(earthQuake);
     }
 
     private void showMap(EarthQuake earthQuake) {
         List<EarthQuake> earthQuakes = new ArrayList<>();
+        earthQuakes.add(earthQuake);
         earthQuakes.add(earthQuake);
 
         mapFragment.setEarthQuakes(earthQuakes);
@@ -87,9 +92,6 @@ public class earthquake_detail extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showLayout() {
-        txtInfoDetail.setText("MAGNITUDE: " + earthQuake.getMagnitude() + " ID: " + earthQuake.get_id());
-    }
 
 
     @Override
