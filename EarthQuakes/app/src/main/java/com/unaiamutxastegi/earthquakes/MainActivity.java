@@ -2,50 +2,91 @@ package com.unaiamutxastegi.earthquakes;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.unaiamutxastegi.earthquakes.alarm.Alarm;
+import com.unaiamutxastegi.earthquakes.fragments.EarthQuakeListFragment;
+import com.unaiamutxastegi.earthquakes.fragments.EarthQuakeListMapFragment;
+import com.unaiamutxastegi.earthquakes.listerners.TabListener;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
 import com.unaiamutxastegi.earthquakes.service.DownloadEarthQuakeService;
 import com.unaiamutxastegi.earthquakes.tasks.DownloadEarthquakesTask;
 
 
-public class MainActivity extends ActionBarActivity implements DownloadEarthquakesTask.AddEarthQuakeInterface {
+public class MainActivity extends Activity implements DownloadEarthquakesTask.AddEarthQuakeInterface {
 
     private final static String EARTHQUAKE_PREFS = "earthquake_prefs";
+    private final static String SELECTED_TAB ="SELECTED_TAB";
     public int PREFS_ACTIVITY = 1;
-
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_main);
 
-
+        createTab();
         //downloadEarthQuake();
         checkToSetAlarm();
+    }
+
+    private void createTab() {
+
+        actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        ActionBar.Tab tabList = actionBar.newTab();
+        tabList.setText("List")
+                .setTabListener(new TabListener<EarthQuakeListFragment>
+                        (this, R.id.fragmentContainer, EarthQuakeListFragment.class));
+
+        actionBar.addTab(tabList);
+
+        ActionBar.Tab tabMap = actionBar.newTab();
+
+        tabMap.setText("Map")
+                .setTabListener(new TabListener<EarthQuakeListMapFragment>
+                        (this, R.id.fragmentContainer, EarthQuakeListMapFragment.class));
+
+        actionBar.addTab(tabMap);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_TAB, 0));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_TAB, actionBar.getSelectedNavigationIndex());
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
-        //return true;
-
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
@@ -53,29 +94,17 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthquak
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_list:
-                openList();
-                return true;
-            case R.id.action_settings:
-                Intent prefsIntent = new Intent(this, SettingsActivity.class);
-                startActivityForResult(prefsIntent, PREFS_ACTIVITY);
+        int id = item.getItemId();
 
-                return true;
-            case R.id.action_map:
-                openMap();
-                return true;
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent prefsIntent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(prefsIntent, PREFS_ACTIVITY);
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void openMap() {
-        setContentView(R.layout.activity_map_layout);
-    }
-
-    private void openList() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

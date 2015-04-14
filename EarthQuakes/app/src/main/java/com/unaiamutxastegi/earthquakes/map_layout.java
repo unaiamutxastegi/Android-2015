@@ -11,6 +11,7 @@ public class map_layout extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_map_layout);
     }
 
@@ -18,7 +19,7 @@ public class map_layout extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_map_layout, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

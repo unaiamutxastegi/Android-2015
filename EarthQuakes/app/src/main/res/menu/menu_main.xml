@@ -7,13 +7,5 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_list"
-        android:title="@string/list"
-        app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_map"
-        android:title="@string/map"
-        app:showAsAction="ifRoom"/>
 
 </menu>
