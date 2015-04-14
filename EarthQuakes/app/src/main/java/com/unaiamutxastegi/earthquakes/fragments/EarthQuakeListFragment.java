@@ -8,6 +8,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,6 +24,7 @@ import com.unaiamutxastegi.earthquakes.database.EarthQuakeDB;
 import com.unaiamutxastegi.earthquakes.earthquake_detail;
 import com.unaiamutxastegi.earthquakes.model.Coordinate;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
+import com.unaiamutxastegi.earthquakes.service.DownloadEarthQuakeService;
 import com.unaiamutxastegi.earthquakes.tasks.DownloadEarthquakesTask;
 
 import org.json.JSONArray;
@@ -69,8 +73,32 @@ public class EarthQuakeListFragment extends ListFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_refresh,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                doRefresh();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void doRefresh() {
+        Intent download = new Intent(getActivity(), DownloadEarthQuakeService.class);
+        getActivity().startService(download);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = super.onCreateView(inflater, container, savedInstanceState);
+
+        setHasOptionsMenu(true);
 
         earthQuakes = new ArrayList<>();
 

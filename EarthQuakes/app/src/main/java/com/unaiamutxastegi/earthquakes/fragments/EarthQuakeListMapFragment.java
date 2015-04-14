@@ -1,8 +1,15 @@
 package com.unaiamutxastegi.earthquakes.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -11,6 +18,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.unaiamutxastegi.earthquakes.R;
 import com.unaiamutxastegi.earthquakes.fragments.abstracts.AbstractMapFragment;
 import com.unaiamutxastegi.earthquakes.model.EarthQuake;
+import com.unaiamutxastegi.earthquakes.service.DownloadEarthQuakeService;
 
 import java.util.List;
 
@@ -56,6 +64,36 @@ public class EarthQuakeListMapFragment extends AbstractMapFragment{
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 10);
 
         getMap().animateCamera(cu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_refresh,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                doRefresh();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void doRefresh() {
+        Intent download = new Intent(getActivity(), DownloadEarthQuakeService.class);
+        getActivity().startService(download);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View layout = super.onCreateView(inflater, container, savedInstanceState);
+
+        setHasOptionsMenu(true);
+        return layout;
     }
 
     @Override

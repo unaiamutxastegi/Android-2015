@@ -1,10 +1,17 @@
 package com.unaiamutxastegi.earthquakes.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.unaiamutxastegi.earthquakes.MainActivity;
 import com.unaiamutxastegi.earthquakes.R;
 import com.unaiamutxastegi.earthquakes.alarm.Alarm;
 import com.unaiamutxastegi.earthquakes.database.EarthQuakeDB;
@@ -81,6 +88,8 @@ public class DownloadEarthQuakeService extends Service {
                 for (int i = earthquakes.length() - 1; i >= 0; i--) {
                     processEarthQuakeTask(earthquakes.getJSONObject(i));
                 }
+
+                showNotifications(count);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -124,5 +133,30 @@ public class DownloadEarthQuakeService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private void showNotifications(int count) {
+        Intent intentToFire = new Intent(this, MainActivity.class);
+
+        PendingIntent activityIntent = PendingIntent.getActivity(this, 0, intentToFire, 0);
+
+        Notification.Builder builder = new Notification.Builder(this);
+
+        builder.setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.count_earthquakes, count))
+                .setWhen(System.currentTimeMillis())
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setContentIntent(activityIntent);
+
+        Notification notification = builder.getNotification();
+
+        String svc = Context.NOTIFICATION_SERVICE;
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(svc);
+        int NOTIFICATION_REF = 1;
+
+        notificationManager.notify(NOTIFICATION_REF, notification);
     }
 }
